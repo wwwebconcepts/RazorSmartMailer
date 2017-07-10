@@ -1,0 +1,177 @@
+﻿@charset "UTF-8";
+/* css created by:James W. Threadgill james@wwwebconcepts.com on 06/04/2017. */
+/*copyright wwweb concepts http://wwwebconcepts.com */
+body {
+	font-family:Verdana, Helvectica, Arial;
+	background:#fff;
+	margin:10px;
+	padding:0;
+}
+/* page titles */
+hgroup.title {
+    margin-bottom: 10px;
+    font-family: Verdana, Helvectica, Arial;
+    font-variant: small-caps !important;
+    font-weight: bold !important;
+}
+    hgroup.title h1 {
+        font-size: 24px;
+        display: normal;
+        margin-left: 0;
+    }
+    hgroup.title h2 {
+        font-variant: small-caps !important;
+        font-weight: bold !important;
+        font-size: 18px;
+        margin-left: 3px;
+    }
+.thanks_lbl {
+    width: 100%;
+    clear: left;
+    float: left;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 5px 5px 15px;
+    border: 0;
+}
+.thanks_field {
+    display: inline;
+    float: left;
+    clear: right;
+    text-align: left;
+    margin: 10px 5px 5px 15px;
+    font-size: 16px;
+    border: 0;
+}
+#form-container {
+    width: 80%;
+    margin: 0 auto 25px;
+    border: 0;
+}
+.forms {
+    border: 0;
+    float: left;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}
+table {
+    width: 100%;
+    border: 0;
+    padding: 10px;
+    margin: 0 auto;
+    background-color: #c1cce3;
+    border: solid 1px #272727;
+    border-radius: 12px;
+    -moz-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    -webkit-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+}
+table .label {
+    white-space: nowrap;
+    width: 35%;
+    }
+/*template header image style--use this if you want no space around the image*/
+.header {
+    text-align:center;
+    float:left;
+    clear:both;
+    width: 100%;
+}
+.header_image {
+    width: 100%;
+    margin:0 auto;
+    border: 0;
+}
+.mail_container {
+    width: 80%;
+    min-width: 320px;
+    max-width: 960px;
+    margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout */
+}
+
+@media (min-width: 320px) {
+    .mail_container {
+        width: 100%;
+        margin: 0 auto;
+  }
+}
+.mail-content {
+    text-align: left;
+    width: 100%;
+    float: left;
+    font-family: Verdana, Helvectica, Arial;
+    font-size: 16px;
+    padding: 15px;
+}
+.specialbold { /* bold text:contact/inquire field descriptors, bold table labels and output values */
+        font-family: Verdana, Helvectica, Arial;
+        font-size: 12px;
+        font-weight: bold;
+        word-spacing: 0;
+        text-indent: 0;
+        margin: 0;
+    }
+.footer {
+    font-size: 12px;
+    float: left;
+    clear: both;
+    width: 100%;
+    margin: 0 auto;
+}
+.logo-image {
+    float: left;
+    margin: 0 10px auto 0;
+}
+.clear {
+    clear:both;
+    width:100%;
+}
+
+/*format footer links*/
+a.footer {
+	color:#900;
+	text-decoration:none;
+	font-family:Verdana, Helvectica, Arial;
+	font-size:10px;
+}
+a:link.footer {
+	color:#900;
+	text-decoration:none;
+	font-family:Verdana, Helvectica, Arial;
+	font-size:10px;
+}
+a:visited.footer {
+	color:#999;
+	text-decoration:none;
+	font-family:Verdana, Helvectica, Arial;
+	font-size:10px;
+}
+a:hover.footer {
+	color:#F00;
+	text-decoration:underline;
+	font-family:Verdana, Helvectica, Arial;
+	font-size:10px;
+}
+
+/* Format all other links */
+a:link {
+	color:#900;
+	text-decoration:none;
+	font-family:Verdana, Helvectica, Arial;
+	font-size:12px;
+}
+a:visited {
+	color:#333;
+	text-decoration:none;
+	font-family:Verdana, Helvectica, Arial;
+	font-size:12px;
+}
+a:hover.footer {
+    color: #F00;
+    text-decoration: underline;
+    font-family: Verdana, Helvectica, Arial;
+    font-size: 10px;
+}
+
