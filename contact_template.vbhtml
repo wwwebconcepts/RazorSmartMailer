@@ -21,19 +21,19 @@ End Code
 <div id="form-container">
     <div class="forms">
         <table>
-            @If RazorSmartMailer.ImageArray.Count > 0 Then
+            @If RazorSmartMailer.EmbeddedAttachments.Count > 0 Then
                 @<tr>
                     <td Class="label"><div class="thanks_lbl">@HttpContext.Current.Application("eMailAttachments")</div></td>
                     <td>
                         <div class="thanks_field">
-                            @For i = 0 To RazorSmartMailer.ImageArray.Count - 1
-                                Dim fileName As String = RazorSmartMailer.ImageArray(i)
-                                @<div class="embedded-image">@Path.GetFileName(fileName)</div>
+                            @For i = 0 To RazorSmartMailer.EmbeddedAttachments.Count - 1
+                                Dim contentID As String = RazorSmartMailer.EmbeddedAttachments(i)
+                                @<div class="embedded-image"><img src="cid:@contentID" /></div>
                             Next
                         </div>
                     </td>
                 </tr>
-                RazorSmartMailer.ImageArray.Clear()
+                RazorSmartMailer.EmbeddedAttachments.Clear()
             End If
             <tr>
                 <td class="label"><div class="thanks_lbl">@HttpContext.Current.Application("FormNameLbl")</div></td>

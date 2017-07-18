@@ -23,7 +23,6 @@
     Dim recipient As String = HttpContext.Current.Application("RecipientEmail")
     Dim recipientName As String = HttpContext.Current.Application("RecipientEmailName")
 
-
     ' Get properties from InitializeApplication
     Dim userDatabase As String = InitializeApplication.DataConn()
     Dim appInstallPath As String = InitializeApplication.AppInstallFolder()
@@ -40,9 +39,9 @@
     With theCAPTCHA
         .PublicKey = "" & recaptchaPublicKey & ""
         .PrivateKey = "" & recaptchaPrivateKey & ""
-        .QueryParameter = ""
-        .RedirectURL = ""
-        .FailURL = ""
+        .QueryParameter = "" ' optional
+        .RedirectURL = "" ' optional
+        .FailURL = "" ' optional
     End With
 
     ' Setup validation variables
@@ -62,7 +61,7 @@
     Validation.RequireField("State", "State cannot be blank.<br />")
     Validation.RequireField("ZipCode", "Zip Code cannot be blank.<br />")
     Validation.Add("ZipCode", Validator.Regex(zipcodepattern, "Invalid zip code. Allowed patterns are: _____-____ or _____.<br />"))
-    Validation.RequireField("Recaptcha", "Recaptcha response cannot be blank.<br />")
+    'Validation.RequireField("Recaptcha", "Recaptcha response cannot be blank.<br />")
     Validation.RequireField("Message", "Message cannot be blank.<br />")
     Validation.Add("Message", Validator.StringLength(maxLength:=500, minLength:=25, errorMessage:="Message must be at least 25 and no more than 500 characters.<br />"))
 
@@ -79,38 +78,45 @@
         subject = Request.Form("_subject")
         human = theCAPTCHA.Construct()
 
-        If Not human Then
-            human = True 'ModelState.AddFormError("Recaptcha response was not correct.")
+        ' If RecaptchaNet has application errors ModelState.AddFormError().
+        If theCAPTCHA.ErrorCodes.Count > 0 Then
+            For i = 0 To theCAPTCHA.ErrorCodes.Count - 1
+                ModelState.AddFormError(theCAPTCHA.ErrorCodes(i).Message & theCAPTCHA.ErrorCodes(i).HelpLink)
+            Next
         End If
 
+        ' If Recaptcha validation failed ModelState.AddFormError().
+        ' If Not human Then ModelState.AddFormError("Recaptcha response is not correct.")
+
         If Validation.IsValid() Then
-            ' If successful, set templatePath and redirect to thanks page on success.
-            Dim templatePath As String = "Mail_Templates/contact_template.vbhtml?N=" & Server.UrlEncode(name).Trim & "&A=" & Server.UrlEncode(address).Trim & "&E=" & Server.UrlEncode(email).Trim & "&P=" & Server.UrlEncode(phone).Trim & "&C=" & Server.UrlEncode(city).Trim & "&S=" & Server.UrlEncode(state).Trim & "&Z=" & Server.UrlEncode(zipcode).Trim & "&M=" & Server.UrlEncode(message).Trim & ""
+            ' If validated, set templatePath and redirect to thanks page on success.
+            Dim templatePath As String = ("Mail_Templates/contact_template.vbhtml?N=" & Server.UrlEncode(name).Trim & "&A=" & Server.UrlEncode(address).Trim & "&E=" & Server.UrlEncode(email).Trim & "&P=" & Server.UrlEncode(phone).Trim & "&C=" & Server.UrlEncode(city).Trim & "&S=" & Server.UrlEncode(state).Trim & "&Z=" & Server.UrlEncode(zipcode).Trim & "&M=" & Server.UrlEncode(message).Trim & "")
             Dim thanksPath As String = ("Thanks?N=" & Server.UrlEncode(name).Trim & "&A=" & Server.UrlEncode(address).Trim & "&E=" & Server.UrlEncode(email).Trim & "&P=" & Server.UrlEncode(phone).Trim & "&C=" & Server.UrlEncode(city).Trim & "&S=" & Server.UrlEncode(state).Trim & "&Z=" & Server.UrlEncode(zipcode).Trim & "&M=" & Server.UrlEncode(message).Trim & "")
             Try
                 ' Initialize RazorSmartMailer 
                 Dim theMailer As New RazorSmartMailer
-
-                ' Configure RazorSmartMailer  properties
+                ' Configure RazorSmartMailer properties
                 With theMailer
                     ' templater properties
                     .AppInstallFolder = "" & appInstallPath & ""
                     .MailTemplatePath = "" & templatePath & ""
-                    .AddHTMLBasePath = False
                     .ParsePaths = True
                     .PreMailerCss = True
-                    ' SMTP Server for System.Net.Mail
+                    ' Define SMTP Server properties for System.Net.Mail.
                     .SmtpUserName = "james@wwwebconcepts"
                     .SmtpPassword = "Karen7065"
                     .SmtpHost = "192.168.1.16"
                     ' email properties
                     .SuccessRedirect = "" & thanksPath & ""
                     .AttachmentFolder = "UploadedAttachments"
-                    .eMailRecipient = "" & recipient & "," & recipientName & ""
+                    .eMailRecipient = "" & recipient & "," & recipientName & "| staff@wwwebconcepts.com, Staff"
                     .eMailFrom = "" & email & "," & name & ""
                     .eMailSubject = "" & subject & ""
                     .eMailCC = "" & email & "," & name & ""
-                    ' Imaging Resize
+                    .eMailBCC = "staff@classiccopper.com, Staff | james@classiccopper.com, James Threadgill"
+                    '.EmbedAttachments = True
+                    .ImagesToEmbed = "~/Mail_Templates/MailTemplateImages/mailbanner.gif, ~/icons/favicon.png"
+                    ' Image Resize
                     .ImageSizes = "525, 525, large | 175, 175, thumb | 325, 325,"
                     ' Crop
                     .CropSizes = "500, 500 | 150, 150 | 300, 300"
@@ -123,25 +129,20 @@
                     .WatermarkOpacity = 25
                     ' Caption
                     .CaptionText = "http://wwwebconcepts.com"
-                    .CaptionFontSizes = "22, 10, 12"
+                    .CaptionFontSizes = "22, 8, 12"
                     .CaptionAlign = "Center-Top"
-                End With
-
-                ' If Recaptcha has errors ModelState.AddFormError()
-                If theCAPTCHA.ErrorCodes.Count > 0 Then
-                    For i = 0 To theCAPTCHA.ErrorCodes.Count - 1
-                        ModelState.AddFormError(theCAPTCHA.ErrorCodes(i).Message & ": " & theCAPTCHA.ErrorCodes(i).HelpLink)
-                    Next
-                Else
-                    ' Send mail
-                    theMailer.SendSystemMail()
-                    ' If RazorSmartMailer has errors ModelState.AddFormError()
-                    If theMailer.ErrorCodes.Count > 0 Then
-                        For i = 0 To theMailer.ErrorCodes.Count - 1
-                            ModelState.AddFormError(theMailer.ErrorCodes(i).Message & ": " & theMailer.ErrorCodes(i).HelpLink)
+                    .CaptionFontStyle = "Bold"
+                    .CaptionFontColor = "White"
+                    ' Send System.Net.Mail message.
+                    .SendSystemMail()
+                    ' If RazorSmartMailer has application errors ModelState.AddFormError().
+                    If .ErrorCodes.Count > 0 Then
+                        For i = 0 To .ErrorCodes.Count - 1
+                            ModelState.AddFormError(.ErrorCodes(i).Message & .ErrorCodes(i).HelpLink)
                         Next
                     End If
-                End If
+                End With
+                ' End RazorSmartMailer code.
             Catch e As Exception
                 ModelState.AddFormError(e.Message)
             End Try
@@ -168,89 +169,89 @@ End Code
                     @* If at least one validation error exists, notify the user *@
                     @Html.ValidationSummary("Please correct the errors and try again.", excludeFieldErrors:=True, htmlAttributes:=Nothing)
                     @If String.IsNullOrEmpty(recipient) Then
-                    @Html.Raw(applicationError)
+                        @Html.Raw(applicationError)
                     Else
-                    @<fieldset>
-                        <legend class="notice-text">
-                            @HttpContext.Current.Application("FormInstructionsLbl")
-                        </legend>
-                        <div class="name">
-                            <div class="form_lbl">
-                                <Label for="Name">@HttpContext.Current.Application("FormNameLbl")</Label>
+                        @<fieldset>
+                            <legend class="notice-text">
+                                @HttpContext.Current.Application("FormInstructionsLbl")
+                            </legend>
+                            <div class="name">
+                                <div class="form_lbl">
+                                    <Label for="Name">@HttpContext.Current.Application("FormNameLbl")</Label>
+                                </div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("Name")
+                                    <input name="Name" id="Name" type="text" class="long_txt" value="@name" @Validation.For("Name") maxlength="100" />
+                                </div>
                             </div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("Name")
-                                <input name="Name" id="Name" type="text" class="long_txt" value="@name" @Validation.For("Name") maxlength="100" />
+                            <div class="email">
+                                <div class="form_lbl"><label for="Email">@HttpContext.Current.Application("FormEmailLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("Email")
+                                    <input name="Email" id="Email" type="text" class="long_txt" value="@email" @Validation.For("Email") maxlength="100" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="email">
-                            <div class="form_lbl"><label for="Email">@HttpContext.Current.Application("FormEmailLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("Email")
-                                <input name="Email" id="Email" type="text" class="long_txt" value="@email" @Validation.For("Email") maxlength="100" />
+                            <div class="address">
+                                <div class="form_lbl"><label for="Address">@HttpContext.Current.Application("FormAddressLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("Address")
+                                    <input name="Address" id="Address" type="text" class="long_txt" value="@address" @Validation.For("Address") maxlength="100" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="address">
-                            <div class="form_lbl"><label for="Address">@HttpContext.Current.Application("FormAddressLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("Address")
-                                <input name="Address" id="Address" type="text" class="long_txt" value="@address" @Validation.For("Address") maxlength="100" />
+                            <div class="city">
+                                <div class="form_lbl"><label for="City">@HttpContext.Current.Application("FormCityLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("City")
+                                    <input name="City" id="City" type="text" class="long_txt" value="@city" @Validation.For("City") maxlength="100" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="city">
-                            <div class="form_lbl"><label for="City">@HttpContext.Current.Application("FormCityLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("City")
-                                <input name="City" id="City" type="text" class="long_txt" value="@city" @Validation.For("City") maxlength="100" />
+                            <div class="state">
+                                <div class="form_lbl"><label for="State">@HttpContext.Current.Application("FormStateLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("State")
+                                    <select name="State" id="State" @Validation.For("State")>
+                                        <option value="" @IIf(String.IsNullOrEmpty(state), Html.Raw("selected=""selected"""), "")>@HttpContext.Current.Application("FormStateLbl")</option>
+                                        @For Each item In rs_locations
+                                            @<option value="@item("D_Destination")" @IIf(item("D_Destination").ToString = state, Html.Raw("selected=""selected"""), "")>@item("D_Destination")</option>
+                                        Next
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="state">
-                            <div class="form_lbl"><label for="State">@HttpContext.Current.Application("FormStateLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("State")
-                                <select name="State" id="State" @Validation.For("State")>
-                                    <option value="" @IIf(String.IsNullOrEmpty(state), Html.Raw("selected=""selected"""), "")>@HttpContext.Current.Application("FormStateLbl")</option>
-                                    @For Each item In rs_locations
-                                        @<option value="@item("D_Destination")" @IIf(item("D_Destination").ToString = state, Html.Raw("selected=""selected"""), "")>@item("D_Destination")</option>
-                                    Next
-                                </select>
+                            <div class="zipcode">
+                                <div class="form_lbl"><label for="ZipCode">@HttpContext.Current.Application("FormZipCodeLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("ZipCode")
+                                    <input name="ZipCode" id="ZipCode" class="zip" type="text" value="@zipcode" @Validation.For("ZipCode") maxlength="10" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="zipcode">
-                            <div class="form_lbl"><label for="ZipCode">@HttpContext.Current.Application("FormZipCodeLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("ZipCode")
-                                <input name="ZipCode" id="ZipCode" class="zip" type="text" value="@zipcode" @Validation.For("ZipCode") maxlength="10" />
+                            <div class="phone">
+                                <div class="form_lbl"><label for="Phone">@HttpContext.Current.Application("FormPhoneLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("Phone")
+                                    <input name="Phone" id="Phone" type="text" value="@phone" @Validation.For("Phone") maxlength="20" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="phone">
-                            <div class="form_lbl"><label for="Phone">@HttpContext.Current.Application("FormPhoneLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("Phone")
-                                <input name="Phone" id="Phone" type="text" value="@phone" @Validation.For("Phone") maxlength="20" />
+                            <div class="File">
+                                <div class="form_lbl"><label for="File">@HttpContext.Current.Application("FormFileLbl")</label></div>
+                                <div class="form_field">
+                                    <input type="file" name="FileUpload1" id="FileUpload1" value="" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="File">
-                            <div class="form_lbl"><label for="File">@HttpContext.Current.Application("FormFileLbl")</label></div>
-                            <div class="form_field">
-                                <input type="file" name="FileUpload1" id="FileUpload1" value="" />
+                            <div class="message">
+                                <div class="form_lbl"><label for="message">@HttpContext.Current.Application("FormMessageLbl")</label></div>
+                                <div class="form_field">
+                                    @Html.ValidationMessage("Message")
+                                    <textarea name="Message" id="Message" cols="50" rows="6" @Validation.For("Message")>@message</textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="message">
-                            <div class="form_lbl"><label for="message">@HttpContext.Current.Application("FormMessageLbl")</label></div>
-                            <div class="form_field">
-                                @Html.ValidationMessage("Message")
-                                <textarea name="Message" id="Message" cols="50" rows="6" @Validation.For("Message")>@message</textarea>
+                            <div class="captcha">
+                                <div class="form_lbl"><label for="recaptcha">@HttpContext.Current.Application("ReCaptchaLbl")</label></div><div class="form_field">@Html.ValidationMessage("Recaptcha") @Html.Raw(theCAPTCHA.GetControl(theme, language))</div>
                             </div>
-                        </div>
-                        <div class="captcha">
-                            <div class="form_lbl"><label for="recaptcha">@HttpContext.Current.Application("ReCaptchaLbl")</label></div><div class="form_field">@Html.ValidationMessage("Recaptcha") @Html.Raw(theCAPTCHA.GetControl(theme, language))</div>
-                        </div>
-                        <div Class="form_btn">
-                            <input name="_Submit" id="_Submit" type="submit" class="button" value="@HttpContext.Current.Application("FormBtnTxt")" />
-                        </div>
-                        <input name="_subject" id="_subject" type="hidden" value="@HttpContext.Current.Application("ContactFormSubject")" />
-                    </fieldset>
+                            <div Class="form_btn">
+                                <input name="_Submit" id="_Submit" type="submit" class="button" value="@HttpContext.Current.Application("FormBtnTxt")" />
+                            </div>
+                            <input name="_subject" id="_subject" type="hidden" value="@HttpContext.Current.Application("ContactFormSubject")" />
+                        </fieldset>
                     End If
                 </form>
             </div>

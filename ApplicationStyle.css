@@ -1,0 +1,381 @@
+﻿/* css created by:James W. Threadgill james@wwwebconcepts.com on 01/05/2017. */
+/*copyright wwweb concepts http://wwwebconcepts.com */
+/* columns layout styles */
+.app-content { /* Application pages main content area */
+    vertical-align: top;
+    margin-top: 10px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+}
+/* Social */
+.addthisbar {
+    display: inline-block;
+    margin: 5px 0 15px 0 !important;
+}
+/* Row styles and centering */
+.row-homefeatured, .row-itemdetails {
+    float: left;
+    position: relative;
+    left: 50%;
+    width: 100%;
+}
+.center-wrapper {
+    float: right;
+    position: relative;
+    right: 50%;
+    width: 100%;
+}
+/* Column styles */
+.home-featured {
+    cursor: pointer;
+    overflow-y: hidden;
+    background-color: #dfdfdf;
+    font-size: 16px !important;
+    vertical-align: top;
+    padding: 10px;
+    margin-bottom: 25px;
+    border: solid 1px #272727;
+    border-radius: 8px;
+    -moz-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    -webkit-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+}
+/*Application List Styles Even numbered items */
+.alt_home-featured {
+    cursor: pointer;
+    overflow-y: hidden;
+    background-color: #c1cce3;
+    font-size: 16px !important;
+    text-align: left;
+    vertical-align: top;
+    padding: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #272727;
+    border-radius: 8px;
+    -moz-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    -webkit-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+}
+
+.home-featured a, .alt_home-featured a {
+    letter-spacing: 1px !important;
+    font-size: 16px !important;
+    font-weight: bold;
+    font-variant: small-caps;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+
+/* application thumb image DIVs --should be self explanatory */
+.thmb-featured, .item-featured_img {
+    text-align: center;
+    cursor: pointer;
+    float: left;
+    padding: 5px;
+    background-color: #fff;
+    margin: 0 5px 5px 0;
+    border-collapse: collapse;
+    border: solid 1px #5a769b;
+    border-radius: 8px;
+}
+/************************/
+/* Misc block styles	*/
+/************************/
+.rs-nav-wrapper { /* navigation table */
+    text-align: center;
+    width:100%;
+    margin-left:-20px;
+    clear: both;
+    font-size: 18px !important;
+    font-variant: small-caps;
+    font-weight: bold;
+    padding: 5px;
+    border: 0;
+}
+ .rs-nav-wrapper li {
+    display: inline;
+    text-decoration: none;
+    }
+
+.rs-nav-wrapper li a {
+    color:#940000;
+    }
+.rs-nav-wrapper li img {
+    display: inline;
+    padding:10px 15px 10px 15px;
+    text-decoration: none;
+}
+/************************/
+/* Text Styles	*/
+/************************/
+.item-featured-caption {
+    width:100%;
+    clear: both;
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    margin: 5px 0 5px 0;
+}
+.content-count {
+    clear: left;
+    color: #940000;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0 0 15px 0;
+}
+.item-date {
+    clear: left;
+    border: 0;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    font-size: 12px;
+}
+.searchtexthighlight { /* formats search text highlighting */
+    background: #099cf0;
+}
+.error-text {
+    text-align: left !important;
+    color: #F00;
+}
+.notice-text {
+    text-align: left;
+    color: #940000;
+    width: 100%;
+    clear: both;
+    float: left;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+/* form elements */
+.forms {
+    float:left;
+    text-align:center;
+    padding: 10px;
+    width: 100%;
+    margin: 10px auto 30px auto !important;
+    background-color: #c1cce3;
+    border-radius: 8px;
+    border-collapse: collapse;
+    border: solid 1px #5a769b;
+    box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    -moz-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+    -webkit-box-shadow: -3px 6px 5px rgba(0,0,0,.5);
+}
+
+.form_lbl {
+    margin:5px 0 2px 0;
+    white-space: nowrap;
+    width: 40%;
+    clear: left;
+    float: left;
+    padding: 10px 5px 5px 15px;
+    text-align: right;
+    font-weight: bold
+}
+.form_field {
+    float: left;
+    clear: right;
+    text-align: left;
+    margin: 5px auto 5px 5px;
+}
+
+.textarea_lbl {
+    padding: 40px 0 10px 0;
+    width: 125px;
+    clear: left;
+    float: left;
+    margin: 5px 5px 5px 15px;
+    text-align: right;
+    font-weight: bold
+}
+
+textarea {
+    width: 100%;
+    background-color: #ccc !important;
+    margin: 10px 2px 5px 0;
+    border-radius: 6px;
+}
+
+.form_btn {
+    width: 100%;
+    clear: both;
+    float: left;
+    text-align: center;
+    margin: 15px auto 15px auto;
+}
+.checkbox {
+    text-align: left;
+    padding: 10px 0 10px 0;
+}
+
+input {
+    background-color: #ccc !important;
+    margin:5px 10px 5px auto !important;
+    border-radius: 6px !important;
+}
+
+.zip {
+    width: 120px;
+}
+
+select {
+    display: inline-block;
+    padding:5px 2px 5px 2px;
+    background-color: #ccc;
+    margin: 5px 10px 5px auto !important;
+    border-radius: 6px;
+}
+
+.recaptcha {
+    margin-top: 15px;
+}
+
+.thanks_lbl {
+    white-space: nowrap;
+    width: 40%;
+    clear: left;
+    float: left;
+    text-align: right;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 5px 5px 15px;
+    margin: 5px 0 2px 0;
+}
+.thanks_field {
+    display: inline;
+    width: 60%;
+    float: left;
+    clear: right;
+    text-align: left;
+    padding: 10px 5px 5px 15px;
+    margin: 5px 0 2px 0;
+    font-size: 16px;
+}
+
+.button {
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    font-variant: small-caps;
+    letter-spacing: 2px;
+    border: 1px solid #272727;
+    padding: 7px;
+    margin:10px 0 10px auto;
+    background-color: #ccc;
+    border-radius: 5px;
+}
+
+#form-container {
+    width:75%;
+    margin:0 auto;
+}
+
+
+
+/* unsed  */
+
+/********************************/
+/* Application output links	 	*/
+/********************************/
+
+.rs_blog_nav { /* navigation table */
+    width: 100%;
+    font-variant: small-caps;
+    font-weight: bold;
+    margin: 10px auto 0 auto;
+    border: 0;
+}
+
+.rs_blog_nav_prev { /* navigation table */
+    float: left;
+    display: inline;
+    text-align: left;
+    border: 0;
+    padding-bottom: 10px;
+}
+
+.rs_blog_nav_next { /* navigation table */
+    float: right;
+    display: inline;
+    text-align: right;
+    border: 0;
+    padding-bottom: 10px;
+}
+
+.location_bar {
+    width: 99%;
+    text-align: left;
+    margin: 10px auto 10px auto;
+    padding: 5px;
+    clear: both;
+    letter-spacing: 1px !important;
+    font-size: 12px !important;
+    font-weight: bold;
+    font-variant: small-caps;
+    font-family:Tahoma, Geneva, sans-serif;
+    border: 1px solid #cecece; /*272727*/
+    background-color: #e3e5ef;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+.location_bar:hover {
+  -moz-box-shadow: -3px 4px 3px rgba(0,0,0,.20);
+  -webkit-box-shadow: -3px 4px 3px rgba(0,0,0,.20);
+   box-shadow: -3px 4px 3px rgba(0,0,0,.20);
+    }
+
+.video_player {
+    margin: 0 0 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.divider {
+    width: 100%;
+    clear: both;
+    margin: 10px auto 20px auto;
+    border-bottom: solid 1px #000000;
+}
+
+.offlinecontent { /*content unavailable styles*/
+    text-align: left;
+    vertical-align: top;
+    padding: 5px;
+    border-collapse: collapse;
+    border: 0;
+}
+.post_tags {
+    float: left;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+.bold { /* recordset navigation */
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+.specialbold { /* bold text:contact/inquire field descriptors, bold table labels and output values */
+    font-weight: bold;
+    word-spacing: 0;
+    text-indent: 0;
+    margin: 0;
+}
+
+.smallspecialbold {
+    font-size: 14px;
+    font-weight: bold;
+    word-spacing: 0;
+    text-indent: 0;
+    margin: 0;
+}
+
+
+.pdf_icontxt {
+    display: inline-block;
+    text-align: right;
+    margin: 0 5px;
+    font-size: 12px;
+}
