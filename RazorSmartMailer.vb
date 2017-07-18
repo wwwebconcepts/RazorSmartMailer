@@ -1,86 +1,37 @@
-﻿'=========================================================
-' WWWeb Concepts wwwebconcepts.com
+﻿' WWWeb Concepts wwwebconcepts.com
 ' James W. Threadgill james@wwwebconcepts.com
-' RazorSmartMailer Version 1.0.0.0 Copyright 2017
-'=========================================================
-
-' RazorSmartMailer calling code
-' Dim theMailer As New RazorSmartMailer
-' RazorSmartMailer templater properties
-'theMailer.MailTemplatePath = "MailTemplatePath"
-'theMailer.PreMailerCss = true
-'theMailer.AddHTMLBasePath = false
-'theMailer.ParsePaths = false
-'theMailer.ErrorCodes = nothing (returns errors)
-'theMailer.GetMailBody() ' returns body only
-
-' RazorSmartMailer sendmail properties
-'theMailer.EmailRecipient = ""
-'theMailer.EmailFrom = ""
-'theMailer.EmailCC = ""
-'theMailer.EmailBC = ""
-'theMailer.EmailReplyTo = ""
-'theMailer.EMailEncoding = "utf-8"
-'theMailer.EMailSubject = ""
-'theMailer.IsBodyHtml = True
-'theMailer.EmailPriority  = "Normal"
-'theMailer.SystemMailHeaders = ""
-'theMailer.AdditionalHeaders = ""
-'theMailer.AttachmentFolder = "SmartMailerAttachments"
-'theMailer.SaveAttachments = True
-'theMailer.SendWebMail() ' does it all with web mail helper
-
-' SMTP Server properites
-'theMailer.SmtpUsername = ""
-'theMailer.SmtpPassword = ""
-'theMailer.SmtpHost = "localhost"
-'theMailer.SmtpEnableSsl = False
-'theMailer.SmtpPort = 25
-'theMailer.SystemMailHeaders = Nothing
-'theMailer.SystemMailEncoding = Encding.UTF8
-'theMailer.SendSystemMail() ' does it all with system mail
-' Resize
-'theMailer.ImageSizes = (String Format "width, height, suffix | width, height, suffix |)
-'theMailer.PreventEnlarge =Ttrue
-'theMailer.PreserveAspectRatio = True
-' Crop
-'theMailer.CropSizes = (String Format: "width, height | width, height |) *Must match resize order.
-'theMailer.CropPosition = (default "center-middle")
-' Watermark
-'theMailer.WatermarkMask = ""
-'theMailer.WatermarkPadding = 10
-'theMailer.WatermarkOpacity = 50
-'theMailer.WatermarkSizes = "128, 128"
-'theMailer.WatermarkAlign = "Center-Middle"
-' Captions
-'theMailer.CaptionText = ""
-'theMailer.CaptionFont = "Ariel"
-'theMailer.CaptionFontSizes = "14"
-'theMailer.CaptionFontColor = "Black"
-'theMailer.CaptionFontStyle =  "Bold" 'Valid values are: "Regular", "Bold", "Italic", "Underline", and "Strikeout".
-'theMailer.CaptionOpacity = 100
-'theMailer.CaptionPadding = 10
-'theMailer.CaptionAlign = "Center-Middle" 
-' Uploader
-'theMailer.UploadFolder = "SmartMailerUploads" 
-
+' RazorSmartMailer Version 1.0.0.0 
+'=========================================================================================================================================================
+' MIT License
+' Copyright(c) 2017 James Threadgill
+' Permission Is hereby granted, free Of charge, to any person obtaining a copy of this software And associated documentation files (the "Software"), to deal 
+' in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, And/Or sell
+' copies of the Software, And to permit persons to whom the Software Is'furnished to do so, subject to the following conditions:
+'
+' The above copyright notice And this permission notice shall be included In all copies Or substantial portions Of the Software.
+'
+' THE SOFTWARE Is PROVIDED "AS IS", WITHOUT WARRANTY Of ANY KIND, EXPRESS Or IMPLIED, INCLUDING BUT Not LIMITED To THE WARRANTIES Of MERCHANTABILITY, 
+' FITNESS For A PARTICULAR PURPOSE And NONINFRINGEMENT. In NO Event SHALL THE  AUTHORS Or COPYRIGHT HOLDERS BE LIABLE For ANY CLAIM, DAMAGES Or OTHER
+' LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM, OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS 
+' IN THE  SOFTWARE.
+'=============================================================================================================================================================
 Imports PreMailer
 Imports System.IO
 Imports System.Net
 Imports System.Math
 Imports PreMailer.Net
 Imports System.IO.Path
+Imports System.Net.Mime
 Imports System.Net.Mail
 Imports System.Web.Helpers
 Imports System.Web.HttpContext
 Imports System.Web.Helpers.WebMail
 Imports Microsoft.VisualBasic.Strings
+
 Public Class RazorSmartMailer
     Public ReadOnly Property ErrorCodes As New List(Of WebException)
-
-    ' Section templater
     '***********************************************************************************
-    ' Templater Private variables
+    ' Templater - Private variables
     '***********************************************************************************
     Private p_basePath As String
     Private p_appInstallFolder As String
@@ -130,9 +81,8 @@ Public Class RazorSmartMailer
         End Set
     End Property
 
-    ' Section eMail
     '***********************************************************************************
-    ' eMail Private variables
+    ' eMail - Private variables
     '***********************************************************************************
     Private p_emailRecipient As String
     Private p_emailFrom As String
@@ -151,6 +101,9 @@ Public Class RazorSmartMailer
     Private p_attachmentFolder As String
     Private p_attachmentMaxLength As Integer
     Private p_saveAttachments As Boolean
+    Private p_embedAttachments As Boolean
+    Private p_imagesToEmbed As String
+    Private p_embedAllowExtensions As String
     Private p_fileNamingStyle As String
     Private p_successRedirect As String
     ' SMTP
@@ -159,9 +112,12 @@ Public Class RazorSmartMailer
     Private p_SmtpHost As String
     Private p_SmtpEnableSsl As Boolean
     Private p_SmtpPort As Integer
-    ' Shared variable p_emailAttachments contains attachment file paths.
+    ' p_emailAttachments List of attachment file paths.
     Private Shared p_emailAttachments As New List(Of String)
-
+    ' p_embeddedAttachments List of content IDs of embedded attachments.
+    Private Shared p_embeddedAttachments As New List(Of String)
+    ' p_embeddedImages List of content IDs of embedded images.
+    Private Shared p_embeddedImages As New List(Of String)
     ' eMail properties
     Public Property SmtpUserName() As String
         Get
@@ -325,6 +281,30 @@ Public Class RazorSmartMailer
             p_fileNamingStyle = value
         End Set
     End Property
+    Public Property ImagesToEmbed() As String
+        Get
+            Return p_imagesToEmbed
+        End Get
+        Set(ByVal value As String)
+            p_imagesToEmbed = value
+        End Set
+    End Property
+    Public Property EmbedAllowExtensions() As String
+        Get
+            Return p_embedAllowExtensions
+        End Get
+        Set(ByVal value As String)
+            p_embedAllowExtensions = value
+        End Set
+    End Property
+    Public Property EmbedAttachments() As Boolean
+        Get
+            Return p_embedAttachments
+        End Get
+        Set(ByVal value As Boolean)
+            p_embedAttachments = value
+        End Set
+    End Property
     Public Property SaveAttachments() As Boolean
         Get
             Return p_saveAttachments
@@ -341,15 +321,24 @@ Public Class RazorSmartMailer
             p_successRedirect = value
         End Set
     End Property
+    Public Shared ReadOnly Property EmbeddedImages() As List(Of String)
+        Get
+            Return p_embeddedImages
+        End Get
+    End Property
+    Public Shared ReadOnly Property EmbeddedAttachments() As List(Of String)
+        Get
+            Return p_embeddedAttachments
+        End Get
+    End Property
     Public Shared ReadOnly Property eMailAttachments() As List(Of String)
         Get
             Return p_emailAttachments
         End Get
     End Property
 
-    ' Section Imaging
     '***********************************************************************************
-    ' Imaging Private variables
+    ' Imaging - Private variables
     '***********************************************************************************
     ' Resize
     Private p_imageSizes As String
@@ -527,10 +516,18 @@ Public Class RazorSmartMailer
     ' File uploader/image processor
     '**********************************
     Private p_uploadFolder As String
-    ' List of images processed by imaging
+    ' system paths of images processed by imaging
     Private Shared p_imageArray As New List(Of String)
-    ' List of all uploaded files.
+    ' system paths of uploaded files
     Private Shared p_uploadedFiles As New List(Of String)
+    Public Property UploadFolder() As String
+        Get
+            Return p_uploadFolder
+        End Get
+        Set(ByVal value As String)
+            p_uploadFolder = value
+        End Set
+    End Property
     Public Shared ReadOnly Property ImageArray() As List(Of String)
         Get
             Return p_imageArray
@@ -541,18 +538,11 @@ Public Class RazorSmartMailer
             Return p_uploadedFiles
         End Get
     End Property
-    Public Property UploadFolder() As String
-        Get
-            Return p_uploadFolder
-        End Get
-        Set(ByVal value As String)
-            p_uploadFolder = value
-        End Set
-    End Property
     '**********************************
     ' Initialize class
     '**********************************
     Public Sub New()
+        p_appInstallFolder = ""
         ' Templater
         p_basePath = GetBasePath()
         p_mailTemplatePath = ""
@@ -579,6 +569,9 @@ Public Class RazorSmartMailer
         p_filesToAttach = Nothing
         p_attachmentFolder = "SmartMailerAttachments"
         p_attachmentMaxLength = 10000
+        p_embedAttachments = False
+        p_embedAllowExtensions = ".jpg, .jpeg, .gif, .png, .ico"
+        p_imagesToEmbed = ""
         p_saveAttachments = True
         p_fileNamingStyle = ""
         ' Imaging Resize
@@ -592,18 +585,27 @@ Public Class RazorSmartMailer
         p_watermarkMask = ""
         p_watermarkPadding = 5
         p_watermarkOpacity = 25
-        p_watermarkSizes = "128, 128 | 64, 64, | 32, 32 |"
+        p_watermarkSizes = "128, 128"
         p_watermarkAlign = "Center-Middle"
         ' Caption
         p_captionText = ""
         p_captionOpacity = 100
         p_captionFont = "Arial"
-        p_captionFontSizes = "16, 14, 12"
+        p_captionFontSizes = "16"
         p_captionFontColor = "Black"
         p_captionFontStyle = "Regular"
         p_captionAlign = "Center-Middle"
         p_captionPadding = 5
         p_uploadFolder = "SmartMailerUploads"
+        ' clear lists & collections
+        p_imageArray.Clear()
+        p_uploadedFiles.Clear()
+        p_emailAttachments.Clear()
+        p_embeddedImages.Clear()
+        p_embeddedAttachments.Clear()
+        p_imagesUploaded.Clear()
+        p_additionalHeaders.Clear()
+        p_systemMailHeaders.Clear()
     End Sub
 
     ' **********************************************************************************
@@ -630,7 +632,7 @@ Public Class RazorSmartMailer
                 'If response code 200 OK and response length > 0, read response into mailBodyHTML.
             ElseIf (serverResponse.ContentLength > 0) Then
                 Dim reader As New StreamReader(serverResponse.GetResponseStream())
-                mailBodyHTML = reader.ReadToEnd().ToString
+                mailBodyHTML = reader.ReadToEnd()
                 reader.Close()
                 serverResponse.Close()
             Else
@@ -643,7 +645,7 @@ Public Class RazorSmartMailer
 
         ' If (p_addHTMLBasePath) call function to add <base href="p_basePath" /> tag to HTML <head>
         If (p_addHTMLBasePath) Then mailBodyHTML = AddBasePath(mailBodyHTML)
-        ' If (p_parsePaths) call regular expression function to make relative paths absolute
+        ' If (p_parsePaths) call regular expression function to make relative paths absolute.
         If (p_parsePaths) Then mailBodyHTML = MakeRelativeLinksAbsolute(mailBodyHTML)
         ' If (p_preMailerCss) pass mailBodyHTML to PreMailer to inline css.
         If (p_preMailerCss) Then mailBodyHTML = MoveHTMLStylesInline(mailBodyHTML)
@@ -723,9 +725,8 @@ Public Class RazorSmartMailer
         Dim strProtocol As String = Current.Request.Url.Scheme & "://"
         Dim port As String = Current.Request.Url.Port
         If port <> 80 And port <> 433 Then port = ":" & port Else port = ""
-        Dim strAppInstallFolder As String = p_appInstallFolder
-        If Not String.IsNullOrEmpty(strAppInstallFolder) Then strAppInstallFolder &= "/"
-        strPath = strProtocol & Current.Request.ServerVariables("SERVER_NAME") & port & "/" & strAppInstallFolder
+        If Not String.IsNullOrEmpty(p_appInstallFolder) Then p_appInstallFolder &= "/"
+        strPath = strProtocol & Current.Request.ServerVariables("SERVER_NAME") & port & "/" & p_appInstallFolder
         Return strPath
     End Function
 
@@ -748,7 +749,7 @@ Public Class RazorSmartMailer
         If p_emailAttachments.Count > 0 Then
             Try
                 For i = 0 To p_emailAttachments.Count - 1
-                    Dim filePath As String = p_emailAttachments(i).ToString.Trim
+                    Dim filePath As String = p_emailAttachments(i).Trim
                     If File.Exists(filePath) Then
                         File.Delete(filePath)
                     End If
@@ -799,18 +800,12 @@ Public Class RazorSmartMailer
     End Sub
 
     ' Send System.Net.Mail().
-    ' TODO: embedded images
-    ' Dim mailBodyHtml As AlternateView = AlternateView.CreateAlternateViewFromString(mailBody, New Mime.ContentType("text/html"))
-    ' Dim mailBodyText As AlternateView = AlternateView.CreateAlternateViewFromString(mailText, Nothing, "text/plain")
-    '.AlternateViews.Add(mailBodyHtml)
-    '.AlternateViews.Add(mailBodyText)
     Public Sub SendSystemMail()
         ' Process uploaded attachments
         GetAttachments()
         ' Declare variables
         Dim mailSMTP As New SmtpClient()
         Dim message As New MailMessage()
-        Dim mailBody As String = GetMailBody()
         Dim mailText As String = ""
         Dim priority As MailPriority = MailPriority.Normal
 
@@ -824,14 +819,14 @@ Public Class RazorSmartMailer
             With message
                 ' System.Net.Mail.MailMesage settings 
                 If InStr(p_emailFrom, ",") Then
-                    ' eMail address and name
+                    ' From as string in format "emailaddress, name"
                     Dim fromArray As Array = Split(p_emailFrom, ",")
                     .From = New MailAddress(fromArray(0).ToString.Trim, fromArray(1).ToString.Trim)
-                Else ' eMail address only
+                Else ' From as string in format "emailaddress"
                     .From = New MailAddress(p_emailFrom.Trim)
                 End If
 
-                ' Multiple recipients
+                ' Multiple recipients as string in format "emailaddress, name | emailaddress, name" 
                 If InStr(p_emailRecipient, "|") Then
                     If Right(p_emailRecipient.TrimEnd, 1) <> "|" Then p_emailRecipient &= "|"
                     Dim recipientsArray As Array = Split(p_emailRecipient, "|")
@@ -840,19 +835,20 @@ Public Class RazorSmartMailer
                         If InStr(recipientsArray(i).ToString, ",") Then
                             Dim recipientArray As Array = Split(recipientsArray(i), ",")
                             .To.Add(New MailAddress(recipientArray(0).ToString.Trim, recipientArray(1).ToString.Trim))
-                        Else ' Recipient email address only
+                        Else ' Recipient email address only format "emailaddress | emailaddress"
                             .To.Add(New MailAddress(recipientsArray(i).ToString.Trim))
                         End If
-                    Next ' Single recipient 
+                    Next
+                    ' Single recipient
                 ElseIf InStr(p_emailRecipient, ",") Then
-                    ' eMail address and name
+                    ' Name and address in format "emailaddress, name"
                     Dim recipientArray As Array = Split(p_emailRecipient, ",")
                     .To.Add(New MailAddress(recipientArray(0).ToString.Trim, recipientArray(1).ToString.Trim))
-                Else ' eMail address only
+                Else ' Address only in format "emailaddress".
                     .To.Add(New MailAddress(p_emailRecipient.Trim))
                 End If
 
-                ' Add CC address(es) from input string.
+                ' Add CC address(es) as string in format "emailaddress, name | emailaddress, name". 
                 If Not String.IsNullOrEmpty(p_emailCC) Then
                     ' Multiple recipients
                     If InStr(p_emailCC, "|") Then
@@ -866,7 +862,8 @@ Public Class RazorSmartMailer
                             Else ' Recipient email address only
                                 .CC.Add(New MailAddress(emailCCArray(i).ToString.Trim))
                             End If
-                        Next ' Single recipient 
+                        Next
+                        ' Single recipient 
                     ElseIf InStr(p_emailCC, ",") Then
                         ' eMail address and name
                         Dim CCArray As Array = Split(p_emailCC, ",")
@@ -876,7 +873,7 @@ Public Class RazorSmartMailer
                     End If
                 End If
 
-                ' Add BCC address(es) from input string
+                ' Add BCC address(es)  as string in format "emailaddress, name | emailaddress, name" 
                 If Not String.IsNullOrEmpty(p_emailBCC) Then
                     ' Multiple recipients
                     If InStr(p_emailBCC, "|") Then
@@ -890,7 +887,8 @@ Public Class RazorSmartMailer
                             Else ' Recipient email address only
                                 .Bcc.Add(New MailAddress(emailBCCArray(i).ToString.Trim))
                             End If
-                        Next  ' Single recipient 
+                        Next
+                        ' Single recipient 
                     ElseIf InStr(p_emailBCC, ",") Then
                         ' eMail address and name
                         Dim BCCArray As Array = Split(p_emailBCC, ",")
@@ -900,29 +898,7 @@ Public Class RazorSmartMailer
                     End If
                 End If
 
-                .Subject = p_eMailSubject
-                .Body = mailBody
-                .BodyEncoding = p_systemMailEncoding
-                .HeadersEncoding = p_systemMailEncoding
-                .SubjectEncoding = p_systemMailEncoding
-                .IsBodyHtml = p_isBodyHtml
-                .Priority = priority
-
-                ' Add headers from passed in NameValueCollection
-                If p_systemMailHeaders.Count > 0 Then
-                    For i = 0 To p_systemMailHeaders.Count - 1
-                        .Headers.Add(p_systemMailHeaders.GetKey(i), p_systemMailHeaders.Get(i))
-                    Next
-                End If
-
-                ' Add attachments p_emailAttachments
-                If p_emailAttachments.Count > 0 Then
-                    For i = 0 To p_emailAttachments.Count - 1
-                        .Attachments.Add(New Attachment(p_emailAttachments(i)))
-                    Next
-                End If
-
-                ' Add addresses to ReplyToList
+                ' ReplyToList as string in format "emailaddress, name | emailaddress, name" 
                 If Not String.IsNullOrEmpty(p_emailReplyTo) Then
                     ' Multiple recipients
                     If InStr(p_emailReplyTo, "|") Then
@@ -936,7 +912,8 @@ Public Class RazorSmartMailer
                             Else ' Recipient email address only
                                 .ReplyToList.Add(New MailAddress(replyToArray(i).ToString.Trim))
                             End If
-                        Next  ' Single recipient 
+                        Next
+                        ' Single recipient 
                     ElseIf InStr(p_emailReplyTo, ",") Then
                         ' eMail address and name
                         Dim replyTo As Array = Split(p_emailReplyTo, ",")
@@ -945,10 +922,93 @@ Public Class RazorSmartMailer
                         .ReplyToList.Add(New MailAddress(p_emailReplyTo.Trim))
                     End If
                 End If
+
+                ' Add headers from passed in NameValueCollection
+                If p_systemMailHeaders.Count > 0 Then
+                    For i = 0 To p_systemMailHeaders.Count - 1
+                        .Headers.Add(p_systemMailHeaders.GetKey(i), p_systemMailHeaders.Get(i))
+                    Next
+                End If
+
+                ' Add attachments from list p_emailAttachments.
+                If p_emailAttachments.Count > 0 Then
+                    For i = 0 To p_emailAttachments.Count - 1
+                        Dim embed As Boolean = False
+                        Dim filePath As String = p_emailAttachments(i)
+                        Dim fileExtension As String = GetExtension(filePath).ToLower
+                        Dim attachedFile As Attachment = New Attachment(filePath)
+                        If p_embedAttachments Then
+                            ' Check if allowed embedded file type. 
+                            If Right(p_embedAllowExtensions.TrimEnd, 1) <> "," Then p_embedAllowExtensions &= ","
+                            Dim allowedExtArray As Array = Split(p_embedAllowExtensions, ",")
+                            For n = 0 To UBound(allowedExtArray) - 1
+                                If fileExtension = allowedExtArray(n) Then
+                                    embed = True
+                                    Exit For
+                                End If
+                            Next
+                        End If
+                        If embed Then
+                            Dim contentID As String = GetFileNameWithoutExtension(filePath).ToLower
+                            attachedFile.ContentId = contentID
+                            .Attachments.Add(attachedFile)
+                            p_embeddedAttachments.Add(contentID)
+                        Else
+                            .Attachments.Add(attachedFile)
+                        End If
+                    Next
+                End If
+
+                ' Add user defined embedded images. 
+                If Not String.IsNullOrEmpty(p_imagesToEmbed) Then
+                    ' Create array from string in format: "image.gif, image.jpg, image.jpeg, image.ico, image.png".
+                    If Right(p_imagesToEmbed.TrimEnd, 1) <> "," Then p_imagesToEmbed &= ","
+                    Dim imagesToEmbed As Array = Split(p_imagesToEmbed, ",")
+                    ' Create a generic Collection for the LinkedResources.
+                    Dim imagesEmbedded As New Collection()
+                    ' Iterate array and add LinkedResources to collection.
+                    For i = 0 To UBound(imagesToEmbed) - 1
+                        Dim filePath As String = Current.Request.MapPath(imagesToEmbed(i).ToString.Trim)
+                        If Not String.IsNullOrEmpty(filePath) Then
+                            Dim imageToEmbed As LinkedResource = New LinkedResource(filePath)
+                            ' Set the contentID used to reference the file.
+                            Dim contentID As String = GetFileNameWithoutExtension(filePath).ToLower
+                            imageToEmbed.ContentId = contentID
+                            ' Add LinkedResource to collection.
+                            imagesEmbedded.Add(imageToEmbed)
+                            ' Add contentID to shared list EmbeddedImages.
+                            p_embeddedImages.Add(contentID)
+                        End If
+                    Next
+                    ' Get the email message body.
+                    Dim mailBodyHTML As String = GetMailBody()
+                    ' Create the AlternateView.
+                    Dim linkedResourceView As AlternateView = AlternateView.CreateAlternateViewFromString(mailBodyHTML, p_systemMailEncoding, MediaTypeNames.Text.Html)
+                    ' Iterate Collection and add LinkedResources to the AlternateView.
+                    For i = 1 To imagesEmbedded.Count
+                        Dim theLinkedResource As LinkedResource = imagesEmbedded(i)
+                        linkedResourceView.LinkedResources.Add(theLinkedResource)
+                    Next
+                    ' Clean Up: Destroy LinkedResource Collection. 
+                    imagesEmbedded = Nothing
+                    ' Add AlternateView to message.
+                    .AlternateViews.Add(linkedResourceView)
+                Else
+                    ' No user embedded images. Use the standard HTML view.
+                    .Body = GetMailBody()
+                End If
+
+                ' Add remaining MailMessage properties.
+                .Subject = p_eMailSubject
+                .BodyEncoding = p_systemMailEncoding
+                .HeadersEncoding = p_systemMailEncoding
+                .SubjectEncoding = p_systemMailEncoding
+                .IsBodyHtml = p_isBodyHtml
+                .Priority = priority
             End With
 
             With mailSMTP
-                ' System.Net.SmtpClient settings
+                ' System.Net.SmtpClient properties.
                 .Host = p_SmtpHost
                 .Credentials = New NetworkCredential(p_SmtpUserName, p_SmtpPassword)
                 .EnableSsl = p_SmtpEnableSsl
@@ -1006,15 +1066,13 @@ Public Class RazorSmartMailer
         End If
     End Sub ' UploadFiles()
 
-    ' ConstructUpload() called by mail subs. uploads files and creates list of email attachments.
+    ' ConstructUpload(), called by mail subs, uploads files and creates list of email attachments.
     Public Sub ConstructUpload()
         ' Get full path to the attachments folder
         Dim FolderPath As String = Current.Request.MapPath(p_attachmentFolder) & "\"
-        Dim httpFiles As HttpFileCollection = p_filesToAttach ' p_filesToAttach from Getfiles()
-
         Try
-            For i = 0 To httpFiles.Count - 1
-                Dim upFile As HttpPostedFile = httpFiles(i)
+            For i = 0 To p_filesToAttach.Count - 1
+                Dim upFile As HttpPostedFile = p_filesToAttach(i)
                 Dim fileName As String = GetFileName(upFile.FileName)
                 Dim upFileLength As Integer = upFile.ContentLength()
                 If upFileLength > 0 Then
@@ -1036,7 +1094,7 @@ Public Class RazorSmartMailer
                             End If
                             'Save the file 
                             UploadFiles(upFile, filePath)
-                            ' Add the filePath to: List(Of p_emailAttachments)
+                            ' Add the filePath to: List(Of p_emailAttachments).
                             p_emailAttachments.Add(filePath)
                         End If
                     Else
@@ -1044,21 +1102,20 @@ Public Class RazorSmartMailer
                     End If
                 End If
             Next
+            ' Release the resources.
+            p_filesToAttach = Nothing
         Catch e As WebException
             ErrorCodes.Add(e)
         End Try
-
     End Sub ' ConstructUpload
 
     ' UploadFiles() is accessed using ProcessUploads() sub.
     Public Overloads Sub UploadFiles()
         ' Get full path to the attachments folder
         Dim FolderPath As String = Current.Request.MapPath(p_uploadFolder) & "\"
-        Dim httpFiles As HttpFileCollection = p_filesToAttach ' p_filesToAttach from Getfiles()
-
         Try
-            For i = 0 To httpFiles.Count - 1
-                Dim upFile As HttpPostedFile = httpFiles(i)
+            For i = 0 To p_filesToAttach.Count - 1
+                Dim upFile As HttpPostedFile = p_filesToAttach(i)
                 Dim fileName As String = GetFileName(upFile.FileName)
                 Dim upFileLength As Integer = upFile.ContentLength()
                 If upFileLength > 0 Then
@@ -1087,6 +1144,8 @@ Public Class RazorSmartMailer
                     End If
                 End If
             Next
+            ' Release the resources.
+            p_filesToAttach = Nothing
         Catch e As WebException
             ErrorCodes.Add(e)
         End Try
@@ -1099,12 +1158,12 @@ Public Class RazorSmartMailer
     Public Sub ResizeImages()
         If Not String.IsNullOrEmpty(p_imageSizes) And p_imagesUploaded.Count > 0 Then
             Try
-                ' Split input string into array of image specifications
+                ' Split input string into array of image specifications.
                 If Right(p_imageSizes.TrimEnd, 1) <> "|" Then p_imageSizes &= "|"
                 Dim imageVarients As Array = Split(p_imageSizes, "|")
                 For n = 0 To p_imagesUploaded.Count - 1
                     For i = 0 To UBound(imageVarients) - 1
-                        ' Split imageVarients(i) into imageWidth, imageHeight & imageSuffix 
+                        ' Split imageVarients(i) into imageWidth, imageHeight & imageSuffix. 
                         Dim imageSpecs As Array = Split(imageVarients(i), ",")
                         Dim imageWidth As Integer = Nothing
                         Dim imageHeight As Integer = Nothing
@@ -1123,7 +1182,7 @@ Public Class RazorSmartMailer
                         Dim imageName As String = imageShortName & imageSuffix & imageExtension
                         Dim imagePath As String = Combine(folderPath & imageName)
 
-                        ' If there's an image, resize it using imageSpecs
+                        ' If there's an image, resize it using imageSpecs.
                         If imageWidth > 0 And imageHeight > 0 Then
                             If Not image Is Nothing Then
                                 ' Save resized image
@@ -1143,12 +1202,11 @@ Public Class RazorSmartMailer
                         End If
                     Next
                 Next
-                ' Clear p_imagesUploaded temporary list of images after adding them to p_imageArray.
-                p_imagesUploaded.Clear()
+                ' Release the resources.
+                p_imagesUploaded = Nothing
             Catch e As WebException
                 ErrorCodes.Add(e)
             End Try
-
         End If
     End Sub
 
@@ -1196,11 +1254,9 @@ Public Class RazorSmartMailer
                                 x_Right = imageWidth - cropWidth
                                 If x_Right < 0 Then x_Right = 0
                             Case "center"
-                                x_Left = imageWidth - cropWidth
-                                x_Left = Floor(x_Left / 2)
+                                x_Left = Floor(imageWidth - cropWidth) / 2
                                 If x_Left < 0 Then x_Left = 0
-                                x_Right = imageWidth - cropWidth
-                                x_Right = Ceiling(x_Right / 2)
+                                x_Right = Ceiling(imageWidth - cropWidth) / 2
                                 If x_Right < 0 Then x_Right = 0
                             Case "right"
                                 x_Left = imageWidth - cropWidth
@@ -1215,11 +1271,9 @@ Public Class RazorSmartMailer
                                 y_Bottom = imageHeight - cropHeight
                                 If y_Bottom < 0 Then y_Bottom = 0
                             Case "middle"
-                                y_Top = imageHeight - cropHeight
-                                y_Top = Floor(y_Top / 2)
+                                y_Top = Floor(imageHeight - cropHeight) / 2
                                 If y_Top < 0 Then y_Top = 0
-                                y_Bottom = imageHeight - cropHeight
-                                y_Bottom = Ceiling(y_Bottom / 2)
+                                y_Bottom = Ceiling(imageHeight - cropHeight) / 2
                                 If y_Bottom < 0 Then y_Bottom = 0
                             Case "bottom"
                                 y_Top = imageHeight - cropHeight
@@ -1252,7 +1306,7 @@ Public Class RazorSmartMailer
     End Sub
 
     ' AddWaterMark() p_watermarkAlign As String in format horizontal-vertical
-    ' AddWaterMark() p_watermarkSizes As String in format "width, height |".
+    ' AddWaterMark() p_watermarkSizes As String in format "width, height | width, height".
     Public Sub AddWaterMark()
         If Not String.IsNullOrEmpty(p_watermarkMask) And p_imageArray.Count > 0 Then
             Try
@@ -1344,7 +1398,6 @@ Public Class RazorSmartMailer
     '***********************************************************************************
     Public Function GetSavedFileName(ByVal FolderPath As String, ByVal HttpFileName As String) As String
         Dim fileName As String = ""
-
         Select Case p_fileNamingStyle
             Case "GUID" 'Save file with GUID System Unique Name
                 fileName = MakeNameUnique(HttpFileName)
@@ -1354,7 +1407,6 @@ Public Class RazorSmartMailer
             Case Else ' store file name as is
                 fileName = GetFileName(HttpFileName)
         End Select
-
         Return fileName
     End Function 'Get File path
 
