@@ -86,7 +86,7 @@
         End If
 
         ' If Recaptcha validation failed ModelState.AddFormError().
-        ' If Not human Then ModelState.AddFormError("Recaptcha response is not correct.")
+        If Not human Then ModelState.AddFormError("Recaptcha response is not correct.")
 
         If Validation.IsValid() Then
             ' If validated, set templatePath and redirect to thanks page on success.
