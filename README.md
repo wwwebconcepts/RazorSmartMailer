@@ -8,6 +8,16 @@ Resize, Crop, AddWaterMark,  AddCaption. Resize creates a list for the remaining
 
 ## Usage
 The RazorSmartMailer class has a number of properties you will need to set. Below are the properties and default settings as well as input formats.
+
+RazorSmartMailer returns five List(of String):
+```vbnet
+        ImageArray
+        UploadedFiles
+        EmailAttachments
+        EmbeddedImages  
+        EmbeddedAttachments
+ ```
+ The first three list return the full system path to the named file collection. The Embedded lists content the content IDs of the embedded files.
 ```vbnet
 'RazorSmartMailer calling code
 Dim theMailer As New RazorSmartMailer
