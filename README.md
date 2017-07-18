@@ -15,7 +15,7 @@ RazorSmartMailer returns five List(of String):
         EmbeddedImages  
         EmbeddedAttachments
  ```
- The first three lists return the full system path to the named file collection. The Embedded lists content the content IDs of the embedded files.
+ The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
 
  ImageArray returns only images that have been resized and any other subsequent image processing. 
 
