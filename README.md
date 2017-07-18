@@ -89,7 +89,7 @@ Below are the imaging properties. These properties are used with the email utili
 Resize is the first image processing executed. It creates the ImageArray list of paths which all the succeeding imaging methods use.
 We recommend the order from the largest to smallest, always saving any changes to original uploaded image for last.
 
- Each set of Resize instructions has three elements width, height, suffix. Each element is followed by a comma and each set is closed with a "|". To save an image with the original file name, leave the suffix element blank. You can also omit the closing "|" as the application will add it it not present. 
+ Each set of Resize instructions has three elements width, height, suffix. The two size elements are followed by a comma and each set is closed with a "|". To save an image with the original file name, leave the suffix element blank. You can also omit the closing "|" at the end of your string as the application will add it it not present. 
 
 
 Let's deconstruct this input string: 
