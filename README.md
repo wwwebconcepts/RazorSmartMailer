@@ -7,8 +7,6 @@ VB.NET Library for sending email via  web forms. RazorSmartMailer has advanced H
 Resize, Crop, AddWaterMark,  AddCaption. Resize creates a list for the remaining methods.  RazorSmartMailer supports multiple operations on images in the order given.
 
 ## Usage
-The RazorSmartMailer class has a number of properties you will need to set. Below are the properties and default settings as well as input formats.
-
 RazorSmartMailer returns five List(of String):
 ```vbnet
         ImageArray
@@ -17,7 +15,7 @@ RazorSmartMailer returns five List(of String):
         EmbeddedImages  
         EmbeddedAttachments
  ```
- The first three list return the full system path to the named file collection. The Embedded lists content the content IDs of the embedded files.
+ The first three lists return the full system path to the named file collection. The Embedded lists content the content IDs of the embedded files.
 
  ImageArray returns only images that have been resized and any other subsequent image processing. 
 
@@ -27,6 +25,9 @@ RazorSmartMailer returns five List(of String):
  EmbeddedImages retuns the list of linked resource embedded images.
 
  Embedded attachments returns the list of attachments embedded in the email body, including any image varients from imaging.
+
+ The RazorSmartMailer class has a number of properties you will need to set. Below are the properties and default settings as well as input formats.
+
 ```vbnet
 'RazorSmartMailer calling code
 Dim theMailer As New RazorSmartMailer
