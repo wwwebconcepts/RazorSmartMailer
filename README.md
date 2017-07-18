@@ -18,6 +18,15 @@ RazorSmartMailer returns five List(of String):
         EmbeddedAttachments
  ```
  The first three list return the full system path to the named file collection. The Embedded lists content the content IDs of the embedded files.
+
+ ImageArray returns only images that have been resized and any other subsequent image processing. 
+
+ Uploaded files returns the list of files uploaded.
+ EmailAttachments return the list of attachments including any image varients from imaging.
+
+ EmbeddedImages retuns the list of linked resource embedded images.
+
+ Embedded attachments returns the list of attachments embedded in the email body, including any image varients from imaging.
 ```vbnet
 'RazorSmartMailer calling code
 Dim theMailer As New RazorSmartMailer
