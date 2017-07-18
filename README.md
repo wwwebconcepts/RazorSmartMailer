@@ -31,7 +31,7 @@ With theMailer
 
     'RazorSmartMailer sendmail properties
     .EmailFrom = "" ' From as string in format "emailaddress, name" or "emailaddress".
-    .EmailRecipient = "" ' Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses iuse the same format oprions as From.
+    .EmailRecipient = "" ' Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses use the same format as From. The closing "|" may be omitted.
     .EmailCC = ""
     .EmailBC = ""
     .EmailReplyTo = ""
