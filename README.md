@@ -4,7 +4,7 @@
 VB.NET Library for sending email via  web forms. RazorSmartMailer has advanced HTML email templating and email messaging. RazorSmartMailer supports Helpers.WebMail, System.NET.Mail, attachment uploads and embed, embed linked resources, and image processing including resize, crop, watermark, and add text. RazorSmartMailer also supports inline CSS via the PreMailer.Net assembly. Razor Smart Mailer is your complete email solution.
 
 ## Dependencies
-RazorSmartMailer requires the System.Web.Helpers and PreMailer assemblies. Property PreMailerCss set True moves Css inline. The image processing features use the Web.Helpers.WebImage class. 
+RazorSmartMailer requires the System.Web.Helpers and PreMailer assemblies. Property PreMailerCss set True moves Css inline via Premailer.Net. The image processing features implement the Web.Helpers.WebImage class. 
 
 ## Order of Imaging Operations
 Resize, Crop, AddWaterMark,  AddCaption. Resize creates a list for the remaining methods.  RazorSmartMailer supports multiple operations on images in the order given.
