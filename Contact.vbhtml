@@ -103,9 +103,9 @@
                     .ParsePaths = True
                     .PreMailerCss = True
                     ' Define SMTP Server properties for System.Net.Mail.
-                    .SmtpUserName = "james@wwwebconcepts"
-                    .SmtpPassword = "Karen7065"
-                    .SmtpHost = "192.168.1.16"
+                    .SmtpUserName = ""
+                    .SmtpPassword = ""
+                    .SmtpHost = ""
                     ' email properties
                     .SuccessRedirect = "" & thanksPath & ""
                     .AttachmentFolder = "UploadedAttachments"
@@ -113,7 +113,7 @@
                     .eMailFrom = "" & email & "," & name & ""
                     .eMailSubject = "" & subject & ""
                     .eMailCC = "" & email & "," & name & ""
-                    .eMailBCC = "staff@classiccopper.com, Staff | james@classiccopper.com, James Threadgill"
+                    .eMailBCC = "" & email & "," & name & "|" & email & "," & name & ""
                     '.EmbedAttachments = True
                     .ImagesToEmbed = "~/Mail_Templates/MailTemplateImages/mailbanner.gif, ~/icons/favicon.png"
                     ' Image Resize
