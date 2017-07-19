@@ -151,10 +151,9 @@ End With
 ```
 When using the upload utility configure any imaging properties you need and call ProcessUploads().  
 ```vbnet
-With theMailer
+Dim theMailer As New RazorSmartMailer
 ' Freestanding File Upload & Imaging
 ProcessUploads() ' Constructs file upload and imaging without an email message.
-End With
 ```
 
 ### Construct `RazorSmartMailer` Instance
