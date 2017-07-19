@@ -20,7 +20,7 @@ RazorSmartMailer returns five List(of String):
 
  Uploaded files returns the list of files uploaded.
 
- EmailAttachments return the list of attachments including any image varients from imaging.
+ EmailAttachments returns the list of attachments including any image varients from imaging.
 
  EmbeddedImages retuns the list of linked resource embedded images.
 
