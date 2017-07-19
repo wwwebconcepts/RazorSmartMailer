@@ -1,4 +1,3 @@
-
 # RazorSmartMailer 
 
 VB.NET Library for sending email via  web forms. RazorSmartMailer has advanced HTML email templating and email messaging. RazorSmartMailer supports Helpers.WebMail, System.NET.Mail, attachment uploads and embed, embed linked resources, and image processing including resize, crop, watermark, and add text. RazorSmartMailer also supports inline CSS via the PreMailer.Net assembly. Razor Smart Mailer is your complete email solution.
@@ -96,7 +95,7 @@ With theMailer
      'Captions
      .CaptionText = "" ' Add text to enable captions.
      .CaptionFont = "Ariel"
-     .CaptionFontSizes = "16"
+i     .CaptionFontSizes = "16"
      .CaptionFontColor = "Black"
      .CaptionFontStyle =  "Bold" Valid values are: "Regular", "Bold", "Italic", "Underline", and "Strikeout".
      .CaptionOpacity = 100
@@ -123,7 +122,7 @@ Let's deconstruct this input string:
  ```
  It makes three images, the first is 525 x 525 and is saved with the suffix "_large"; the second  image is 175 x 175 and is saved with the suffix  "_thumb"; the final image is 325 x 325 and saved with the original file name. 
  
- Why suffix naming? It provides a consistent method for naming generated images so one can easily display them. And it keeps all the images from an orignal source image together in alphabetized groups in file explorers.
+ Why suffix naming? It provides a consistent method for naming generated images so one can easily display them. (Image name strings can be easily manipulated using the System.IO.Path class.) And it keeps all the images from an original source image together in groups when sorted by name in file explorers.
 ```vbnet
 With theMailer
     'Resize
