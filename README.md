@@ -1,3 +1,4 @@
+
 # RazorSmartMailer 
 
 VB.NET Library for sending email via  web forms. RazorSmartMailer has advanced HTML email templating and email messaging. RazorSmartMailer supports Helpers.WebMail, System.NET.Mail, attachment uploads and embed, embed linked resources, and image processing including resize, crop, watermark, and add text. RazorSmartMailer also supports inline CSS via the PreMailer.Net assembly. Razor Smart Mailer is your complete email solution.
@@ -8,35 +9,11 @@ RazorSmartMailer requires the System.Web.Helpers and PreMailer assemblies. Prope
 ## Order of Imaging Operations
 Resize, Crop, AddWaterMark,  AddCaption. Resize creates a list for the remaining methods.  RazorSmartMailer supports multiple operations on images in the order given.
 
-## Usage
-RazorSmartMailer returns five List(of String):
-```vbnet
-        ImageArray
-        UploadedFiles
-        EmailAttachments
-        EmbeddedImages  
-        EmbeddedAttachments
- ```
- The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
-
- ImageArray returns only images that have been resized and any other subsequent image processing. 
-
- Uploaded files returns the list of files uploaded.
-
- EmailAttachments returns the list of attachments including any image varients from imaging.
-
- EmbeddedImages retuns the list of linked resource embedded images.
-
- Embedded attachments returns the list of attachments embedded in the email body, including any image varients from imaging.
-
-RazorSmartMailer has one more List(of WebException): ErrorCodes. This list returns any application errors.
-
+## Usage: Create an Instance
  The RazorSmartMailer class has a number of properties you will need to set. Below are the properties and default settings as well as input formats.
-
-```vbnet
+ ```vbnet
 'RazorSmartMailer calling code
 Dim theMailer As New RazorSmartMailer
-
 With theMailer
     'RazorSmartMailer templater properties
     .AppInstallFolder = "" ' Only if the application is not in the website root do you need to supply the folderpath.
@@ -95,7 +72,7 @@ With theMailer
      'Captions
      .CaptionText = "" ' Add text to enable captions.
      .CaptionFont = "Ariel"
-i     .CaptionFontSizes = "16"
+     .CaptionFontSizes = "16"
      .CaptionFontColor = "Black"
      .CaptionFontStyle =  "Bold" Valid values are: "Regular", "Bold", "Italic", "Underline", and "Strikeout".
      .CaptionOpacity = 100
@@ -106,6 +83,27 @@ i     .CaptionFontSizes = "16"
      ProcessUploads() ' Constructs file upload and imaging without an email message.
 End With
  ```
+ RazorSmartMailer returns five List(of String) you can use to display data in your email template or on your pages:
+ ```vbnet
+        ImageArray
+        UploadedFiles
+        EmailAttachments
+        EmbeddedImages  
+        EmbeddedAttachments
+ ```
+ The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
+
+1) ImageArray returns only images that have been resized and any other subsequent image processing. 
+
+2) Uploaded files returns the list of files uploaded.
+
+3) EmailAttachments returns the list of attachments including any image varients from imaging.
+
+4) EmbeddedImages returns the list of linked resource embedded images.
+
+5) Embedded attachments returns the list of attachments embedded in the email body, including any image varients from imaging.
+
+RazorSmartMailer has one more List(of WebException): ErrorCodes. This list returns any application errors.
 
 ### Imaging with `RazorSmartMailer`
 Below are the imaging properties. These properties are used with the email utility and the file upload utility. All images follow the same path through the methods: Resize, Crop, AddWaterMark,  AddCaption.  
@@ -122,7 +120,7 @@ Let's deconstruct this input string:
  ```
  It makes three images, the first is 525 x 525 and is saved with the suffix "_large"; the second  image is 175 x 175 and is saved with the suffix  "_thumb"; the final image is 325 x 325 and saved with the original file name. 
  
- Why suffix naming? It provides a consistent method for naming generated images so one can easily display them. (Image name strings can be easily manipulated using the System.IO.Path class.) And it keeps all the images from an original source image together in groups when sorted by name in file explorers.
+ Why suffix naming? It provides a consistent method for naming generated images so one can easily display them. And it keeps all the images from an orignal source image together in alphabetized groups in file explorers.
 ```vbnet
 With theMailer
     'Resize
@@ -185,7 +183,7 @@ Horizontal positions: Left Center Right.
 
 Vertical positions: Top Middle Bottom.
 
-Combine the horizontal and vertical choices in any of the 9 possible combinations to select position.
+Combine the horizontal and vertical choices in any of the 9 possible combinations to select position.The required format is: horizontal-vertical. 
 ### Notes
 
 TBD
