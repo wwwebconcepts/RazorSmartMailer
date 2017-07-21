@@ -15,8 +15,8 @@ To send an HTML templated email using the simplest method using the WebMail help
 ```vbnet
 Dim theMailer As New RazorSmartMailer
 With theMailer
-    .MailTemplatePath = "~/mailtemplates/mailtemplate.vbhtml"
-    .SuccessRedirect = "~/thanks.vbhtml
+    .MailTemplatePath = "~/mailtemplates/mailtemplate.vbhtml?your passed values"
+    .SuccessRedirect = "~/thanks.vbhtml?your passed values"
     'RazorSmartMailer sendmail properties
     .EmailFrom = "web@razorsmartmailer.com" ' 
     .EmailRecipient = "user@razorsmartmailer.com" 
