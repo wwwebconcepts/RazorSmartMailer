@@ -1,3 +1,4 @@
+
 # RazorSmartMailer 
 
 VB.NET Library for sending email via  web forms. RazorSmartMailer has advanced HTML email templating and email messaging. RazorSmartMailer supports Helpers.WebMail, System.NET.Mail, attachment uploads and embed, embed linked resources, and image processing including resize, crop, watermark, and add text. RazorSmartMailer also supports inline CSS via the PreMailer.Net assembly. Razor Smart Mailer is your complete email solution.
@@ -14,12 +15,12 @@ To send an HTML templated email using the simplest method, use the WebMail helpe
 ```vbnet
 Dim theMailer As New RazorSmartMailer
 With theMailer
-    .MailTemplatePath = "~/mailtemplates/mailtemplate.vbhtml?your passed values"
+    .MailTemplatePath = "~/Mail_Templates/contact_template.vbhtml?your passed values"
     .SuccessRedirect = "~/thanks.vbhtml?your passed values"
     'RazorSmartMailer sendmail properties
     .EmailFrom = "web@razorsmartmailer.com" ' 
     .EmailRecipient = "user@razorsmartmailer.com" 
-    .EMailSubject = "Your Email Subject"
+    .EMailSubject = "RazorSmartMailer is the great new email solution!"
     SendWebMail() 
 End With
 ```
@@ -55,18 +56,18 @@ With theMailer
     .EMailSubject = ""
     .IsBodyHtml = True
     .EmailPriority = "Normal"
-    .AdditionalHeaders = Nothing
+    .AdditionalHeaders = Nothing ' Takes a List(Of String)
     .AttachmentFolder = "SmartMailerAttachments"
     .SaveAttachments = True
-    SendWebMail() ' Set WebMail SMTP properties in _AppStart. Supports attachments. Does not support embedded images.
+    .SendWebMail() ' Set WebMail SMTP properties in _AppStart. Supports attachments. Does not support embedded images.
 
     'System.Net.Mail Send Properties
-    .SystemMailHeaders = Nothing
+    .SystemMailHeaders = Nothing " Takes a NameValueCollection
     .SystemMailEncoding = Encoding.UTF8
     .EmbedAttachments = False
     .EmbedAllowExtensions = ".jpg, .jpeg, .gif, .png, .ico" ' These are the default allowed extensions for embedded attachments. 
     .ImagesToEmbed = "" ' String Format:  "image.gif, image.jpg, image.jpeg, image.ico, image.png"
-    SendSystemMail() ' Send mail message using System.Net.Mail.
+    .SendSystemMail() ' Send mail message using System.Net.Mail.
 
     'Resize
     .ImageSizes = "" ' String Format:  "width, height, suffix | width, height, suffix |". ' Resize only works if sizes defined. 
@@ -79,15 +80,15 @@ With theMailer
 
      'Watermark
      .WatermarkMask = "" ' Add path to watermark mask to enable watermarks.
-    .WatermarkPadding = 10
+     .WatermarkPadding = 10
      .WatermarkOpacity = 50
-     .WatermarkSizes = "128, 128"
+     .WatermarkSizes = "128, 128" ' Accepts multiple sizes in string format: width, height | width, height |"
      .WatermarkAlign = "Center-Middle"
 
      'Captions
      .CaptionText = "" ' Add text to enable captions.
      .CaptionFont = "Ariel"
-     .CaptionFontSizes = "16"
+     .CaptionFontSizes = "16" Takes multiple arguments in comma separated string format: "16, 14, 12"
      .CaptionFontColor = "Black"
      .CaptionFontStyle =  "Bold" Valid values are: "Regular", "Bold", "Italic", "Underline", and "Strikeout".
      .CaptionOpacity = 100
@@ -95,7 +96,7 @@ With theMailer
      .CaptionAlign = "Center-Middle"
       'Uploader
      .UploadFolder = "SmartMailerUploads" 
-     ProcessUploads() ' Constructs file upload and imaging without an email message.
+     .ProcessUploads() ' Constructs file upload and imaging without an email message.
 End With
  ```
  RazorSmartMailer returns five List(of String) you can use to display data in your email template or on your pages:
@@ -108,7 +109,7 @@ End With
  ```
  The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
 
-1) "ImageArray" returns only images that have been resized. All images must pass through the ResizeImages() method to be added to the list p_imageArray. This Private Shared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
+1) "ImageArray" returns only images that have been resized. All images must pass through the resize method to be added to the list p_imageArray. This Private Shared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
 
 2) "UploadedFiles" returns the list of files uploaded.
 
