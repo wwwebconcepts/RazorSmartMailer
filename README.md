@@ -11,7 +11,7 @@ Resize, Crop, AddWaterMark,  AddCaption. Resize creates a list for the remaining
 ## Construct RazorSmartMailer Instance
 Using RazorSmartMailer is very straightforward. True there are many properties the user can define, but only a few the user must define. Most have default values you're unlikely to change. 
 
-To send an HTML templated email using the simplest method using the WebMail helper, use the following (assumes WebMail SMTP server properties are configured in the _AppStart file as shown in the sample code.):
+To send an HTML templated email using the simplest method, use the WebMail helper. The the following code block shows you how (assumes WebMail SMTP server properties are configured in the _AppStart.vbhtml file as shown in the sample code.):
 ```vbnet
 Dim theMailer As New RazorSmartMailer
 With theMailer
