@@ -108,7 +108,7 @@ End With
  ```
  The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
 
-1) "ImageArray" returns only images that have been resized. All images must pass through the resize method to be added to the list p_imageArray. This Private S bhared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
+1) "ImageArray" returns only images that have been resized. All images must pass through the ResizeImages() method to be added to the list p_imageArray. This Private Shared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
 
 2) "UploadedFiles" returns the list of files uploaded.
 
