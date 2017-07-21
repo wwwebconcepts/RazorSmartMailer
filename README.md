@@ -1,4 +1,3 @@
-
 # RazorSmartMailer 
 
 VB.NET Library for sending email via  web forms. RazorSmartMailer has advanced HTML email templating and email messaging. RazorSmartMailer supports Helpers.WebMail, System.NET.Mail, attachment uploads and embed, embed linked resources, and image processing including resize, crop, watermark, and add text. RazorSmartMailer also supports inline CSS via the PreMailer.Net assembly. Razor Smart Mailer is your complete email solution.
@@ -80,7 +79,7 @@ With theMailer
 
      'Watermark
      .WatermarkMask = "" ' Add path to watermark mask to enable watermarks.
-     .WatermarkPadding = 10
+    .WatermarkPadding = 10
      .WatermarkOpacity = 50
      .WatermarkSizes = "128, 128"
      .WatermarkAlign = "Center-Middle"
@@ -109,7 +108,7 @@ End With
  ```
  The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
 
-1) "ImageArray" returns only images that have been resized. All images must pass through ther resize method to be added to the p_imageArray. This Private S bhared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
+1) "ImageArray" returns only images that have been resized. All images must pass through the resize method to be added to the list p_imageArray. This Private S bhared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
 
 2) "UploadedFiles" returns the list of files uploaded.
 
