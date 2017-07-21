@@ -47,13 +47,13 @@ With theMailer
     .SmtpPort = 25
 
     'RazorSmartMailer sendmail properties
-    .EmailFrom = "" ' From as string in format "emailaddress, name" or "emailaddress".
-    .EmailRecipient = "" ' Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses use the same format as From. The closing "|" may be omitted.
-    .EmailCC = ""
-    .EmailBC = ""
-    .EmailReplyTo = ""
+    .EmailFrom = "" ' SendSystemMail(): From as string in format "emailaddress, name" or "emailaddress".
+    .EmailRecipient = "" ' SendSystemMail(): Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses use the same format as From. The closing "|" may be omitted.
+    .EmailCC = "" ' SendSystemMail(): Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses use the same format as From. The closing "|" may be omitted.
+    .EmailBC = "" ' SendSystemMail(): Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses use the same format as From. The closing "|" may be omitted.
+    .EmailReplyTo = "" ' SendSystemMail(): Multiple recipient lists are strings in format "emailaddress, name | emailaddress, name" or "emailaddress | emailaddress". Single addresses use the same format as From. The closing "|" may be omitted.
     .EMailEncoding = "utf-8"
-    .EMailSubject = ""
+    .EMailSubject = "Razor Smart Mailer Is the eMail Solution"
     .IsBodyHtml = True
     .EmailPriority = "Normal"
     .AdditionalHeaders = Nothing ' Takes a List(Of String)
