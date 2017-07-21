@@ -8,8 +8,24 @@ RazorSmartMailer requires the System.Web.Helpers and PreMailer assemblies. Prope
 
 ## Order of Imaging Operations
 Resize, Crop, AddWaterMark,  AddCaption. Resize creates a list for the remaining methods.  RazorSmartMailer supports multiple operations on images in the order given.
+## Construct RazorSmartMailer Instance
+Using RazorSmartMailer is very straightforward. True there are many properties the user can define, but only a few the user must define. Most have default values you're unlikely to change. 
 
-## Usage: Create an Instance
+To send an HTML templated email using the simplest method using the WebMail helper, use the following (assumes WebMail SMTP server properties are configured in the _AppStart file as shown in the sample code.):
+```vbnet
+Dim theMailer As New RazorSmartMailer
+With theMailer
+    .MailTemplatePath = "~/mailtemplates/mailtemplate.vbhtml"
+    .SuccessRedirect = "~/thanks.vbhtml
+    'RazorSmartMailer sendmail properties
+    .EmailFrom = "web@razorsmartmailer.com" ' 
+    .EmailRecipient = "user@razorsmartmailer.com" 
+    .EMailSubject = "Your Email Subject"
+    SendWebMail() 
+End With
+```
+Sending an email message using the SendSystemMail() method is somewaht more complex. We suggest you start setting  only the properties required then tweak the defaults until the desired effect is produced.
+## Usage: Configure Properties
  The RazorSmartMailer class has a number of properties you will need to set. Below are the properties and default settings as well as input formats.
  ```vbnet
 'RazorSmartMailer calling code
@@ -93,17 +109,17 @@ End With
  ```
  The first three lists return the full system path to the named file collection. The Embedded lists contain the content IDs of the embedded files.
 
-1) ImageArray returns only images that have been resized and any other subsequent image processing. 
+1) "ImageArray" returns only images that have been resized. All images must pass through ther resize method to be added to the p_imageArray. This Private S bhared List(of String) contains the system filepath to the images for processing created by the ResizeImages() method. It is used by the remaining image processing methods: CropImages(), AddWaterMark(), and AddTextCaption() methods and returned as "ImageArray." 
 
-2) Uploaded files returns the list of files uploaded.
+2) "UploadedFiles" returns the list of files uploaded.
 
-3) EmailAttachments returns the list of attachments including any image varients from imaging.
+3) "EmailAttachments" returns the list of attachments including any image varients created by resize.
 
-4) EmbeddedImages returns the list of linked resource embedded images.
+4) "EmbeddedImages" returns the list of linked resource embedded images. (These are the images used in your email template and embdedded in the email message rather than linked to a file on the Internet. 
 
-5) Embedded attachments returns the list of attachments embedded in the email body, including any image varients from imaging.
+5) "EmbeddedAttachments" returns the list of attachments embedded in the email body, including any image varients from imaging.
 
-RazorSmartMailer has one more List(of WebException): ErrorCodes. This list returns any application errors.
+RazorSmartMailer has one more List(of WebException): "ErrorCodes." This list returns any application errors.
 
 ### Imaging with `RazorSmartMailer`
 Below are the imaging properties. These properties are used with the email utility and the file upload utility. All images follow the same path through the methods: Resize, Crop, AddWaterMark,  AddCaption.  
@@ -112,7 +128,6 @@ Resize is the first image processing executed. It creates the ImageArray list of
 We recommend the order from the largest to smallest, always saving any changes to original uploaded image for last.
 
  Each set of Resize instructions has three elements width, height, suffix. The two size elements are followed by a comma and each set is closed with a "|". To save an image with the original file name, leave the suffix element blank. You can also omit the closing "|" at the end of your string as the application will add it if not present. 
-
 
 Let's deconstruct this input string: 
 ```vbnet 
@@ -157,25 +172,6 @@ With theMailer
 ProcessUploads() ' Constructs file upload and imaging without an email message.
 End With
 ```
-
-### Construct `RazorSmartMailer` Instance
-Using RazorSmartMailer is very straightforward. True there are many properties the user can define, but only a few the user must define. Most have default values you're unlikely to change. 
-
-To send an HTML templated email, you'll need 
-```vbnet
-Dim theMailer As New RazorSmartMailer
-With theMailer
-    .MailTemplatePath = "~/mailtemplates/mailtemplate.vbhtml"
-    .SuccessRedirect = "~/thanks.vbhtml" 
-
-    'RazorSmartMailer sendmail properties
-    .EmailFrom = "web@razorsmartmailer.com" ' 
-    .EmailRecipient = "user@razorsmartmailer.com" 
-    .EMailSubject = "Your Email Subject"
-    SendWebMail() 
-End With
-```
-We suggest you start setting  only the properties required then tweak the defaults until the desired effect is produced.
 ### Options
 Crop, Watermark, and Caption methods all use the same 9 point location scheme. It is comprised of 3 horizontal and 3 vertical positions resulting in 9 permutations.
 
