@@ -12,7 +12,8 @@
         <div class="mail_container">
             <div class="mail-content">
                 <div class="header">
-                    <img src="~/Mail_Templates/MailTemplateImages/mailbanner.gif" alt="header" class="header_image" />
+                    <img src="cid:mailbanner" alt="header" class="header_image" />
+                    <!--<img src="~/Mail_Templates/MailTemplateImages/mailbanner.gif" alt="header" class="header_image" />-->
                 </div>
                 <div id="body">
                     @RenderSection("featured", required:=False)
@@ -22,7 +23,7 @@
                 </div>
                 <div class="clear"></div>
                 <footer class="footer">
-                    <a href="http://wwwebconcepts.com" target="_blank"><img src="~/icons/favicon.png" alt="WWWeb Concepts" width="32" height="32" class="logo-image" longdesc="http://wwwebconcepts.com" /></a>Razor Portfolio&#8482; &copy; @DateTime.Now.Year
+                    <a href="http://wwwebconcepts.com" target="_blank"><img src="cid:@RazorSmartMailer.EmbeddedImages(1)" alt="WWWeb Concepts" width="32" height="32" class="logo-image" longdesc="http://wwwebconcepts.com" /></a>Razor Portfolio&#8482; &copy; @DateTime.Now.Year
                     <br />
                     <a href="http://wwwebconcepts.com" title="WWWeb Concepts Web Design, Development, SEO">WWWeb Concepts | Web Design, Development, SEO</a>
                 </footer>
@@ -32,3 +33,6 @@
     </div>
 </body>
 </html>
+@code
+    RazorSmartMailer.EmbeddedImages.Clear()
+End Code
